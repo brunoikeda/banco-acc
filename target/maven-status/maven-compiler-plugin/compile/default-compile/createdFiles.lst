@@ -1,0 +1,5 @@
+com\accenture\bancoaccenture\BancoAccentureApplication.class
+com\accenture\bancoaccenture\model\Cliente$ClienteBuilder.class
+com\accenture\bancoaccenture\model\ContaCorrente.class
+com\accenture\bancoaccenture\model\Cliente.class
+com\accenture\bancoaccenture\model\ContaCorrente$ContaCorrenteBuilder.class
