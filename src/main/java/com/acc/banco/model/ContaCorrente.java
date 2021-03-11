@@ -26,4 +26,7 @@ public class ContaCorrente {
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
+
+    
+    
 }
