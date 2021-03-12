@@ -7,6 +7,7 @@ import com.acc.banco.service.exception.DataIntegrityViolationException;
 import com.acc.banco.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,18 +33,22 @@ public class ClienteService {
     }
 
     //salvanod cliente.
+    @Transactional
     public Cliente save (Cliente cliente) {
 
         return clienteRepository.save(cliente);
     }
 
     //realizando update do cliente
+    @Transactional
     public Cliente update (Cliente cliente){
         Cliente newCliente = findId(cliente.getIdCliente());
         updateData(newCliente, cliente);
         return clienteRepository.save(cliente);
     }
 
+    //deletando cliente
+    @Transactional
     public Cliente delete (Long id){
         Cliente cliente = findId(id);
         clienteRepository.deleteById(cliente.getIdCliente());
