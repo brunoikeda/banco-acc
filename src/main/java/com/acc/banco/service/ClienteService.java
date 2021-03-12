@@ -59,6 +59,7 @@ public class ClienteService {
 
     //Metodo para atualizar os campos que serão realizado o update.
     private void updateData (Cliente newCliente, Cliente cliente){
+        newCliente.setNome(cliente.getNome());
         newCliente.setFone(cliente.getFone());
         newCliente.setCpf(cliente.getCpf());
     }

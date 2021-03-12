@@ -1,8 +1,9 @@
 package com.acc.banco.controller;
 
+
 import com.acc.banco.model.Cliente;
 import com.acc.banco.service.ClienteService;
-import org.apache.coyote.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity save (@RequestBody Cliente cliente) {
+
         Cliente clienteSalvo = clienteService.save(cliente);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
@@ -29,6 +31,27 @@ public class ClienteController {
         List<Cliente> list = clienteService.findAll();
 
         return ResponseEntity.ok(list);
+    }
 
+    @GetMapping("{id}")
+    public ResponseEntity findId (@PathVariable Long id){
+        Cliente cliente = clienteService.findId(id);
+
+        return ResponseEntity.ok(cliente);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity update (@RequestBody Cliente cliente, @PathVariable Long id){
+        cliente.setId(id);
+        cliente = clienteService.update(cliente);
+
+        return ResponseEntity.ok(cliente);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity delete (@PathVariable Long id){
+        Cliente cliente = clienteService.delete(id);
+
+        return ResponseEntity.ok(cliente);
     }
 }
