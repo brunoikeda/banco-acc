@@ -44,7 +44,7 @@ public class ClienteService {
     public Cliente update (Cliente cliente){
         Cliente newCliente = findId(cliente.getIdCliente());
         updateData(newCliente, cliente);
-        return clienteRepository.save(cliente);
+        return clienteRepository.save(newCliente);
     }
 
     //deletando cliente
