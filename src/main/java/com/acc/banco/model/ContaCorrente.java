@@ -19,9 +19,9 @@ public class ContaCorrente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String ContaCorrenteAgencia;
-    private String ContaCorrenteNumero;
-    private BigDecimal contaCorrenteSaldo;
+    private String agencia;
+    private String numero;
+    private BigDecimal saldo;
 
     @ManyToOne
     @JoinColumn(name = "id_cliente")

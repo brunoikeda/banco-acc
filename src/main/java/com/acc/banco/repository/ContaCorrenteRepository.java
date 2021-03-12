@@ -1,5 +1,12 @@
 package com.acc.banco.repository;
 
-public class ContaCorrenteRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import com.acc.banco.model.ContaCorrente;
+
+@Repository
+public interface ContaCorrenteRepository extends JpaRepository<ContaCorrente, Long> {
+
+	
 }
