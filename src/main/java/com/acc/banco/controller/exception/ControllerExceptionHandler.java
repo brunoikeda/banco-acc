@@ -43,7 +43,7 @@ public class ControllerExceptionHandler {
     
     @ExceptionHandler(BalanceException.class)
     public ResponseEntity<StanderError> contraint (BalanceException e, HttpServletRequest request){
-        StanderError err = new StanderError(HttpStatus.BAD_REQUEST.value(), e.getLocalizedMessage());
+        StanderError err = new StanderError(HttpStatus.BAD_REQUEST.value(), "Error Saldo Insuficiente");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 

@@ -10,7 +10,7 @@ public class ContaCorrenteService {
 	
 	private Double contaSaldo;
 
-	  public void deposita(Double valor) {
+	  public void deposita(Double valor) throws ValueNegativeOrZeroException {
 		  	if(valor <= 0) {
 		  		new ValueNegativeOrZeroException("Não é possível depositar um valor negativo ou zero.");
 		  	}
@@ -33,7 +33,7 @@ public class ContaCorrenteService {
 				contaDestino.deposita(valor);
 				return true;
 			} else {
-				new BalanceException("Erro ao tentar transferir, saldo insuficiente.");
+				new BalanceException("Erro ao tentar transferir, saldo insuficiente ou os dados incorretos.");
 				return false;
 			}
 	    }
