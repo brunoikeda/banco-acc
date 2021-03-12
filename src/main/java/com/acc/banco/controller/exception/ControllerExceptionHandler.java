@@ -1,5 +1,6 @@
 package com.acc.banco.controller.exception;
 
+import com.acc.banco.service.exception.BalanceException;
 import com.acc.banco.service.exception.DataIntegrityViolationException;
 import com.acc.banco.service.exception.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,12 @@ public class ControllerExceptionHandler {
             err.addError(x.getField(), x.getDefaultMessage());
         }
 
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+    
+    @ExceptionHandler(BalanceException.class)
+    public ResponseEntity<StanderError> contraint (BalanceException e, HttpServletRequest request){
+        StanderError err = new StanderError(HttpStatus.BAD_REQUEST.value(), e.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 

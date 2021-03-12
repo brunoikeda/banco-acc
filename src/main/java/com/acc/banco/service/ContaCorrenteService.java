@@ -2,12 +2,18 @@ package com.acc.banco.service;
 
 import org.springframework.stereotype.Service;
 
+import com.acc.banco.service.exception.BalanceException;
+import com.acc.banco.service.exception.ValueNegativeOrZeroException;
+
 @Service
 public class ContaCorrenteService {
 	
 	private Double contaSaldo;
 
 	  public void deposita(Double valor) {
+		  	if(valor <= 0) {
+		  		new ValueNegativeOrZeroException("Não é possível depositar um valor negativo ou zero.");
+		  	}
 	    	this.contaSaldo += valor;
 	    }
 	    
@@ -15,20 +21,22 @@ public class ContaCorrenteService {
 	    	if (this.contaSaldo >= valor) {
 	    		this.contaSaldo -= valor;
 	    		return true;
+	    	} else {
+	    		new BalanceException("Saldo insuficiente para o saque.");
+	    		return false;
 	    	}
-	    	return false;
 	    }
 	    
-	    public boolean transfere(double valor, ContaCorrenteService contaDestino) {
+	    public boolean transfere(double valor, ContaCorrenteService contaDestino) throws BalanceException {
 	    	if(this.saca(valor)) {
-	    		this.contaSaldo -= valor;
-	    		contaDestino.deposita(valor);
-	    		return true;
-	    	} 
-	    	return false;
+				this.contaSaldo -= valor;
+				contaDestino.deposita(valor);
+				return true;
+			} else {
+				new BalanceException("Erro ao tentar transferir, saldo insuficiente.");
+				return false;
+			}
 	    }
-	    
-	  
-	    
+	      
 	    
 }
