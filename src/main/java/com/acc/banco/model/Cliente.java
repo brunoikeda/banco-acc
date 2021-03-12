@@ -16,8 +16,9 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCliente;
-    private String clienteCPF;
+    private Long id;
+    private String nome;
+    private String cpf;
     private String fone;
 
 }

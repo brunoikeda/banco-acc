@@ -42,7 +42,7 @@ public class ClienteService {
     //realizando update do cliente
     @Transactional
     public Cliente update (Cliente cliente){
-        Cliente newCliente = findId(cliente.getIdCliente());
+        Cliente newCliente = findId(cliente.getId());
         updateData(newCliente, cliente);
         return clienteRepository.save(newCliente);
     }
@@ -51,7 +51,7 @@ public class ClienteService {
     @Transactional
     public Cliente delete (Long id){
         Cliente cliente = findId(id);
-        clienteRepository.deleteById(cliente.getIdCliente());
+        clienteRepository.deleteById(cliente.getId());
 
         return cliente;
 
@@ -60,6 +60,6 @@ public class ClienteService {
     //Metodo para atualizar os campos que serão realizado o update.
     private void updateData (Cliente newCliente, Cliente cliente){
         newCliente.setFone(cliente.getFone());
-        newCliente.setClienteCPF(cliente.getClienteCPF());
+        newCliente.setCpf(cliente.getCpf());
     }
 }
