@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 
@@ -43,7 +44,5 @@ public class Cliente {
     @Length(min = 11, max = 15, message = "O tamanho deve ser entre 11 a 15 caracteres.")
     private String fone;
     
-    @OneToMany(targetEntity=ContaCorrente.class, mappedBy="cliente",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ContaCorrente> contaCorrente;
 
 }

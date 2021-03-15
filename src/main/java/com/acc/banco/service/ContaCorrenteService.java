@@ -52,6 +52,7 @@ public class ContaCorrenteService {
 		if (contaCorrente.getSaldo().subtract(valor).doubleValue() < 0) {
 			throw new BalanceException("Saldo insuficiente para o saque.");
 		}
+		
 		contaCorrente.setSaldo(contaCorrente.getSaldo().subtract(valor));
 
 		return contaCorrenteRepository.save(contaCorrente);

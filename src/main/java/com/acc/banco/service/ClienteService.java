@@ -55,8 +55,8 @@ public class ClienteService {
     @Transactional
     public Cliente delete (Long id){
         Cliente cliente = findId(id);
-        ContaCorrente contaCorrente = contaCorrenteRepository.findByCliente(cliente);
-        contaCorrenteRepository.delete(contaCorrente);
+//        ContaCorrente contaCorrente = contaCorrenteRepository.findByCliente(cliente);
+//        contaCorrenteRepository.delete(contaCorrente);
         clienteRepository.deleteById(cliente.getId());
 
         return cliente;
