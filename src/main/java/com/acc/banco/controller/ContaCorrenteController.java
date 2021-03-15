@@ -25,7 +25,7 @@ public class ContaCorrenteController {
 	@Autowired
 	private ContaCorrenteService contaCorrenteService;
 
-	@PostMapping("/conta-corrente")
+	@PostMapping("/novo")
 	public ResponseEntity<ContaCorrente> save(@RequestBody ContaCorrente conta) {
 		ContaCorrente contaSalva = contaCorrenteService.save(conta);
 
