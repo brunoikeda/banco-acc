@@ -1,5 +1,6 @@
 package com.acc.banco.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class ContaCorrenteService {
 	// Salvar contas
 	@Transactional
 	public ContaCorrente save(ContaCorrente conta) {
+		conta.setSaldo(new BigDecimal(0));
 		return contaCorrenteRepository.save(conta);
 	}
 
@@ -39,16 +41,21 @@ public class ContaCorrenteService {
 		return conta.orElseThrow(() -> new ObjectNotFoundException("Código não encontrado! Id: " + id));
 	}
 
+
 	//TODO: criar endpoints
-	  private void deposita(Double valor) throws ValueNegativeOrZeroException {
+	  public void deposita(Double valor, Long id) throws ValueNegativeOrZeroException {
 		  	if(valor <= 0) {
 		  		new ValueNegativeOrZeroException("Não é possível depositar um valor negativo ou zero.");
 		  	}
 	    	this.contaSaldo += valor;
 	    }
-	    
-	  	
-	    private boolean saca(double valor) {
+
+	    public void transacao (ContaCorrente contaCorrente, double valor){
+
+		}
+
+
+	    public boolean saca(double valor) {
 	    	if (this.contaSaldo >= valor) {
 	    		this.contaSaldo -= valor;
 	    		return true;
@@ -58,17 +65,17 @@ public class ContaCorrenteService {
 	    	}
 	    }
 	    
-	    @SuppressWarnings("unused")
-		private boolean transfere(double valor, ContaCorrenteService contaDestino) throws BalanceException {
-	    	if(this.saca(valor)) {
-				this.contaSaldo -= valor;
-				contaDestino.deposita(valor);
-				return true;
-			} else {
-				new BalanceException("Erro ao tentar transferir, saldo insuficiente ou os dados incorretos.");
-				return false;
-			}
-	    }
+//	    @SuppressWarnings("unused")
+//		public boolean transfere(double valor, ContaCorrenteService contaDestino) throws BalanceException {
+//	    	if(this.saca(valor)) {
+//				this.contaSaldo -= valor;
+//				contaDestino.deposita(valor);
+//				return true;
+//			} else {
+//				new BalanceException("Erro ao tentar transferir, saldo insuficiente ou os dados incorretos.");
+//				return false;
+//			}
+//	    }
 	      
 	    
 }
