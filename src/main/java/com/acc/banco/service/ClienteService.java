@@ -1,22 +1,26 @@
 package com.acc.banco.service;
 
-import ch.qos.logback.core.net.server.Client;
-import com.acc.banco.model.Cliente;
-import com.acc.banco.repository.ClienteRepository;
-import com.acc.banco.service.exception.DataIntegrityViolationException;
-import com.acc.banco.service.exception.ObjectNotFoundException;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import com.acc.banco.model.Cliente;
+import com.acc.banco.model.ContaCorrente;
+import com.acc.banco.repository.ClienteRepository;
+import com.acc.banco.repository.ContaCorrenteRepository;
+import com.acc.banco.service.exception.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    
+    @Autowired
+    private ContaCorrenteRepository contaCorrenteRepository;
 
     //buscar todos os clientes
     public List<Cliente> findAll (){
@@ -51,6 +55,8 @@ public class ClienteService {
     @Transactional
     public Cliente delete (Long id){
         Cliente cliente = findId(id);
+        ContaCorrente contaCorrente = contaCorrenteRepository.findByCliente(cliente);
+        contaCorrenteRepository.delete(contaCorrente);
         clienteRepository.deleteById(cliente.getId());
 
         return cliente;
@@ -63,4 +69,14 @@ public class ClienteService {
         newCliente.setFone(cliente.getFone());
         newCliente.setCpf(cliente.getCpf());
     }
+
+	public Optional<Cliente> findAgenciaConta(String agencia, String conta) {
+		ContaCorrente contaCorrente = contaCorrenteRepository.findByAgenciaAndConta(agencia, conta);
+		
+		return clienteRepository.findById(contaCorrente == null ? -1 : contaCorrente.getCliente().getId());
+	}
+
+	public Optional<Cliente> findCliente(long id) {
+		return clienteRepository.findById(id);
+	}
 }

@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
@@ -19,8 +21,13 @@ public class ContaCorrente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotEmpty(message = "Campo obrigatório.")
     private String agencia;
-    private String numero;
+
+    @NotEmpty(message = "Campo obrigatório.")
+    private String conta;
+
     private BigDecimal saldo;
 
     @ManyToOne
