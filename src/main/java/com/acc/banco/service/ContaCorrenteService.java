@@ -28,6 +28,7 @@ public class ContaCorrenteService {
 	// Salvar contas
 	@Transactional
 	public ContaCorrente save(ContaCorrente conta) {
+//		conta.setSaldo(new BigDecimal(0));
 		return contaCorrenteRepository.save(conta);
 	}
 	
@@ -79,6 +80,12 @@ public class ContaCorrenteService {
 		transferencia.setContaOrigem(saque(transferencia.getValor(), contaOrigem.getCliente().getId()));
 		transferencia.setContaDestino(deposito(transferencia.getValor(), contaDestino.getCliente().getId()));
 		return transferencia;
+	}
+
+	public ContaCorrente delete(String agencia, String conta) {
+		ContaCorrente contaCorrente = contaCorrenteRepository.findByAgenciaAndConta(agencia, conta);
+		contaCorrenteRepository.delete(contaCorrente);
+		return contaCorrente;
 	}
 
 
