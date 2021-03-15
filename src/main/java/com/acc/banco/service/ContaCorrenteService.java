@@ -1,34 +1,37 @@
 package com.acc.banco.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 
+import com.acc.banco.model.Cliente;
 import com.acc.banco.model.ContaCorrente;
+import com.acc.banco.model.Transferencia;
+import com.acc.banco.repository.ClienteRepository;
 import com.acc.banco.repository.ContaCorrenteRepository;
 import com.acc.banco.service.exception.BalanceException;
 import com.acc.banco.service.exception.ObjectNotFoundException;
-import com.acc.banco.service.exception.ValueNegativeOrZeroException;
 
 @Service
 public class ContaCorrenteService {
-	
-	private Double contaSaldo;
-	
+
 	@Autowired
 	private ContaCorrenteRepository contaCorrenteRepository;
+
+	@Autowired
+	private ClienteRepository clienteRepository;
 
 	// Salvar contas
 	@Transactional
 	public ContaCorrente save(ContaCorrente conta) {
 		return contaCorrenteRepository.save(conta);
 	}
-
-	@GetMapping
+	
+	// Lista todas as contas
 	public List<ContaCorrente> listarContas() {
 		return contaCorrenteRepository.findAll();
 	}
@@ -39,36 +42,43 @@ public class ContaCorrenteService {
 		return conta.orElseThrow(() -> new ObjectNotFoundException("Código não encontrado! Id: " + id));
 	}
 
-	//TODO: criar endpoints
-	  private void deposita(Double valor) throws ValueNegativeOrZeroException {
-		  	if(valor <= 0) {
-		  		new ValueNegativeOrZeroException("Não é possível depositar um valor negativo ou zero.");
-		  	}
-	    	this.contaSaldo += valor;
-	    }
-	    
-	  	
-	    private boolean saca(double valor) {
-	    	if (this.contaSaldo >= valor) {
-	    		this.contaSaldo -= valor;
-	    		return true;
-	    	} else {
-	    		new BalanceException("Saldo insuficiente para o saque.");
-	    		return false;
-	    	}
-	    }
-	    
-	    @SuppressWarnings("unused")
-		private boolean transfere(double valor, ContaCorrenteService contaDestino) throws BalanceException {
-	    	if(this.saca(valor)) {
-				this.contaSaldo -= valor;
-				contaDestino.deposita(valor);
-				return true;
-			} else {
-				new BalanceException("Erro ao tentar transferir, saldo insuficiente ou os dados incorretos.");
-				return false;
-			}
-	    }
-	      
-	    
+	public ContaCorrente saque(BigDecimal valor, long idCliente) {
+		Optional<Cliente> cliente = clienteRepository.findById(idCliente);
+		ContaCorrente contaCorrente = new ContaCorrente();
+		if (cliente.isPresent()) {
+			contaCorrente = contaCorrenteRepository.findByCliente(cliente.get());
+		}
+
+		if (contaCorrente.getSaldo().subtract(valor).doubleValue() < 0) {
+			throw new BalanceException("Saldo insuficiente para o saque.");
+		}
+		contaCorrente.setSaldo(contaCorrente.getSaldo().subtract(valor));
+
+		return contaCorrenteRepository.save(contaCorrente);
+
+	}
+
+	public ContaCorrente deposito(BigDecimal valor, long idCliente) {
+		Optional<Cliente> cliente = clienteRepository.findById(idCliente);
+		ContaCorrente contaCorrente = new ContaCorrente();
+		if (cliente.isPresent()) {
+			contaCorrente = contaCorrenteRepository.findByCliente(cliente.get());
+		}
+
+		contaCorrente.setSaldo(contaCorrente.getSaldo().add(valor));
+
+		return contaCorrenteRepository.save(contaCorrente);
+
+	}
+
+	@Transactional
+	public Transferencia transferencia(Transferencia transferencia) {
+		ContaCorrente contaOrigem = contaCorrenteRepository.findByAgenciaAndConta(transferencia.getContaOrigem().getAgencia(), transferencia.getContaOrigem().getConta());
+		ContaCorrente contaDestino = contaCorrenteRepository.findByAgenciaAndConta(transferencia.getContaDestino().getAgencia(), transferencia.getContaDestino().getConta());
+		transferencia.setContaOrigem(saque(transferencia.getValor(), contaOrigem.getCliente().getId()));
+		transferencia.setContaDestino(deposito(transferencia.getValor(), contaDestino.getCliente().getId()));
+		return transferencia;
+	}
+
+
 }

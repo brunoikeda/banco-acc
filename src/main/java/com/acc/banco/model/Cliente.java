@@ -1,19 +1,31 @@
 package com.acc.banco.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonIgnoreProperties({"contaCorrente"})
 public class Cliente {
 
     @Id
@@ -30,5 +42,8 @@ public class Cliente {
 
     @Length(min = 11, max = 15, message = "O tamanho deve ser entre 11 a 15 caracteres.")
     private String fone;
+    
+    @OneToMany(targetEntity=ContaCorrente.class, mappedBy="cliente",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ContaCorrente> contaCorrente;
 
 }

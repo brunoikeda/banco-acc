@@ -20,7 +20,7 @@ public class ContaCorrente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String agencia;
-    private String numero;
+    private String conta;
     private BigDecimal saldo;
 
     @ManyToOne
