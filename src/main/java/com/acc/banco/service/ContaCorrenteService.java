@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import com.acc.banco.service.exception.ValueNegativeOrZeroException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,7 @@ public class ContaCorrenteService {
 	// Salvar contas
 	@Transactional
 	public ContaCorrente save(ContaCorrente conta) {
-		conta.setSaldo(new BigDecimal(0));
+//		conta.setSaldo(new BigDecimal(0));
 		return contaCorrenteRepository.save(conta);
 	}
 	
@@ -54,6 +53,7 @@ public class ContaCorrenteService {
 		if (contaCorrente.getSaldo().subtract(valor).doubleValue() < 0) {
 			throw new BalanceException("Saldo insuficiente para o saque.");
 		}
+		
 		contaCorrente.setSaldo(contaCorrente.getSaldo().subtract(valor));
 
 		return contaCorrenteRepository.save(contaCorrente);
@@ -80,6 +80,12 @@ public class ContaCorrenteService {
 		transferencia.setContaOrigem(saque(transferencia.getValor(), contaOrigem.getCliente().getId()));
 		transferencia.setContaDestino(deposito(transferencia.getValor(), contaDestino.getCliente().getId()));
 		return transferencia;
+	}
+
+	public ContaCorrente delete(String agencia, String conta) {
+		ContaCorrente contaCorrente = contaCorrenteRepository.findByAgenciaAndConta(agencia, conta);
+		contaCorrenteRepository.delete(contaCorrente);
+		return contaCorrente;
 	}
 
 

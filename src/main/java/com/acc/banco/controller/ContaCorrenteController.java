@@ -8,14 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.acc.banco.model.Cliente;
 import com.acc.banco.model.ContaCorrente;
 import com.acc.banco.model.Transferencia;
 import com.acc.banco.service.ContaCorrenteService;
@@ -31,7 +25,6 @@ public class ContaCorrenteController {
 
 	@PostMapping("/novo")
 	public ResponseEntity<ContaCorrente> save(@Valid @RequestBody ContaCorrente conta) {
-		conta.setSaldo(new BigDecimal(0));
 		ContaCorrente contaSalva = contaCorrenteService.save(conta);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(contaSalva);
@@ -64,6 +57,13 @@ public class ContaCorrenteController {
 
 		return ResponseEntity.ok(transferenciaFinal);
 	}
+	
+	@DeleteMapping("/agencia/{agencia}/conta/{conta}")
+    public ResponseEntity<ContaCorrente> delete(@PathVariable("agencia") String agencia, @PathVariable("conta") String conta){
+    	ContaCorrente contaCorrente = contaCorrenteService.delete(agencia, conta);
+    	
+    	return ResponseEntity.ok(contaCorrente);
+    }
 
 
 
